@@ -242,7 +242,8 @@ namespace sorts
                 case Sort_type.Bubble:
                     Bubble_sort();
                     break;
-                case Sort_type.Insertion:                    
+                case Sort_type.Insertion:
+                    Insertion_sort();
                     break;
                 case Sort_type.Merge:
                     break;
@@ -304,6 +305,22 @@ namespace sorts
             }             
         }
 
+        private void Insertion_sort()
+        {
+            int buf;
+            int count_j;
+            for (int count_i = 1; count_i < Arr.Length ; count_i++)
+            {
+                buf = Arr[count_i];
+                count_j = count_i - 1;
+                while (count_j >= 0 && Arr[count_j] > buf)
+                {
+                    Arr[count_j + 1] = Arr[count_j];
+                    count_j--;
+                }
+                Arr[count_j + 1] = buf;
+            }
+        }
     }
 
 }
