@@ -22,6 +22,8 @@ namespace sorts
 
         private void Start_button_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
+            time.Start();
             Arr_output.Clear();
             Sort_type sort_index;
             Sorts sort = new Sorts();
@@ -119,21 +121,29 @@ namespace sorts
                 Arr_input.AppendText(_obj.ToString());
                 Arr_input.AppendText(" ");
             }
+            time.Stop();
+            Arr_input.AppendText("\nВремя выполнения: ");
+            Arr_input.AppendText(time.ElapsedMilliseconds.ToString());
+            Arr_input.AppendText(" мс.\n");
+            
 
-            System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
-            time.Start();
+            time.Restart();            
             int[] Sorted = sort.It();
             time.Stop();
             Arr_output.AppendText("Время выполнения: ");
             Arr_output.AppendText(time.ElapsedMilliseconds.ToString());
             Arr_output.AppendText(" мс.\n");
             //Arr_output.Clear();
+            time.Restart();
             foreach (int _obj in Sorted)
             {
                 Arr_output.AppendText(_obj.ToString());
                 Arr_output.AppendText(" ");
             }
-
+            time.Stop();
+            Arr_output.AppendText("\nВремя выполнения: ");
+            Arr_output.AppendText(time.ElapsedMilliseconds.ToString());
+            Arr_output.AppendText(" мс.\n");
         }
 
         private void Clear_button_Click(object sender, EventArgs e)
