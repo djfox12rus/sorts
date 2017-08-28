@@ -129,11 +129,11 @@ namespace sorts
             Arr_output.AppendText(" мс.\n");
             //Arr_output.Clear();
             foreach (int _obj in Sorted)
-            {                
+            {
                 Arr_output.AppendText(_obj.ToString());
                 Arr_output.AppendText(" ");
-            }            
-           
+            }
+
         }
 
         private void Clear_button_Click(object sender, EventArgs e)
@@ -246,6 +246,7 @@ namespace sorts
                     Insertion_sort();
                     break;
                 case Sort_type.Merge:
+                    Merge_sort();
                     break;
                 case Sort_type.Tree_sort:
                     break;
@@ -320,6 +321,86 @@ namespace sorts
                 }
                 Arr[count_j + 1] = buf;
             }
+        }
+
+        struct W {
+            public List<int> list;
+            public int weight;
+        }
+
+        private List<int> Merge(List<int> _A, List<int> _B)
+        {            
+            List<int> list_out = new List<int>();            
+            int count_a = 0;
+            int count_b = 0;
+            while (count_a < _A.Count && count_b < _B.Count)
+            {
+                if (_A[count_a] > _B[count_b])
+                {
+                    list_out.Add(_B[count_b]);
+                    count_b++;
+                }
+                else
+                {
+                    list_out.Add(_A[count_a]);
+                    count_a++;
+                }
+            }
+            if (count_a == _A.Count)
+            {
+                while (count_b < _B.Count)
+                {
+                    list_out.Add(_B[count_b]);
+                    count_b++;
+                }
+            }
+            else //if (count_b == _B.Count)
+            {
+                while (count_a < _A.Count)
+                {
+                    list_out.Add(_A[count_a]);
+                    count_a++;
+                }
+            }
+            return list_out;
+        }
+
+        private void Merge_sort()
+        {
+            W temp_list_1 = new W();
+           // W temp_list_2 = new W();
+            Stack<W> stack = new Stack<W>();
+            int[] temp = new int[1];
+            temp[0] = Arr[0];
+            temp_list_1.list = new List<int>(temp);
+            temp_list_1.weight = 1;
+            stack.Push(temp_list_1);
+            temp[0] = Arr[1];
+            temp_list_1.list = new List<int>(temp);
+            temp_list_1.weight = 1;
+            stack.Push(temp_list_1);
+            int len = Arr.Length;            
+            for (int count = 2; count < len; count++)
+            {
+                temp_list_1 = stack.Pop();                
+                while (stack.Count > 0 && temp_list_1.weight == stack.Peek().weight)                    
+                {
+                    temp_list_1.list = Merge(temp_list_1.list, stack.Pop().list);
+                    temp_list_1.weight++;                    
+                }
+                stack.Push(temp_list_1);
+                temp[0] = Arr[count];
+                temp_list_1.list = new List<int>(temp);
+                temp_list_1.weight = 1;
+                stack.Push(temp_list_1);
+            }
+            temp_list_1 = stack.Pop();
+            while (stack.Count > 0)
+            {
+                temp_list_1.list = Merge(temp_list_1.list, stack.Pop().list);
+            }
+
+            Arr = temp_list_1.list.ToArray();
         }
     }
 
