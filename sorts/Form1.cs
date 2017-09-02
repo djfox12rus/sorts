@@ -9,30 +9,32 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace sorts
-{   
+{
 
     public partial class Sorting_form : Form
     {
         public Sorting_form()
         {
             InitializeComponent();
+            chosen_one = null;
         }
 
-        public const int num_of_sorts = 16;
+        private const int num_of_sorts = 16;
+        private int? chosen_one;
 
         private void Start_button_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
-            time.Start();
+
             Arr_output.Clear();
             Sort_type sort_index;
             Sorts sort = new Sorts();
             string str;
             int[] Arr;
-            if (Sort_choose.SelectedIndex != -1)
+            if (chosen_one != null)
             {
-                sort_index = (Sort_type)Sort_choose.SelectedIndex;
-            }
+                sort_index = (Sort_type)chosen_one;
+            }            
             else
             {
                 Arr_output.Clear();
@@ -47,14 +49,14 @@ namespace sorts
             }
             if (Arr_rand_check.Checked)
             {
-                str = Arr_size.Text;                
+                str = Arr_size.Text;
                 if (!Int32.TryParse(str, out int Arr_s))
                 {
                     Arr_output.Clear();
                     Arr_output.AppendText("Невозможно считать размер массива!");
                     return;
                 }
-                if (Arr_s <2)
+                if (Arr_s < 2)
                 {
                     Arr_output.Clear();
                     Arr_output.AppendText("Массивы меньше двух элементов не рассматриваются!");
@@ -74,9 +76,9 @@ namespace sorts
                     Arr_output.Clear();
                     Arr_output.AppendText("Невозможно считать верхнюю границу для генерации элементов!");
                     return;
-                }               
+                }
 
-                if (Arr_min>= Arr_max)
+                if (Arr_min >= Arr_max)
                 {
                     Arr_output.Clear();
                     Arr_output.AppendText("Верхняя граница меньше нижней!");
@@ -84,7 +86,7 @@ namespace sorts
                 }
 
                 sort = new Sorts(sort_index, Arr_s, Arr_min, Arr_max);
-                
+
             }
             if (Arr_input_check.Checked)
             {
@@ -100,98 +102,105 @@ namespace sorts
                     return;
                 }
 
-                Arr = new int[len];                
-                for(int count = 0; count<len;count++)
+                Arr = new int[len];
+                for (int count = 0; count < len; count++)
                 {
                     if (!Int32.TryParse(Spliting[count], out Arr[count]))
                     {
                         Arr_output.Clear();
                         Arr_output.AppendText("Невозможно считать массив! Используйте целые числа.");
                         return;
-                    }                    
+                    }
                 }
-                
+
                 sort = new Sorts(sort_index, Arr);
             }
-
-            Arr = sort.GetArr();
-            Arr_input.Clear();
-            foreach (int _obj in Arr)
+            if (!Dont_show.Checked)
             {
-                Arr_input.AppendText(_obj.ToString());
-                Arr_input.AppendText(" ");
+                time.Start();
+                Arr = sort.GetArr();
+                Arr_input.Clear();
+                foreach (int _obj in Arr)
+                {
+                    Arr_input.AppendText(_obj.ToString());
+                    Arr_input.AppendText(" ");
+                }
+                time.Stop();
+                Arr_input.AppendText("\nВремя выполнения: ");
+                Arr_input.AppendText(time.ElapsedMilliseconds.ToString());
+                Arr_input.AppendText(" мс.\n");
             }
-            time.Stop();
-            Arr_input.AppendText("\nВремя выполнения: ");
-            Arr_input.AppendText(time.ElapsedMilliseconds.ToString());
-            Arr_input.AppendText(" мс.\n");
-            
-
-            time.Restart();            
+            time.Reset();
+            time.Start();
             int[] Sorted = sort.It();
             time.Stop();
             Arr_output.AppendText("Время выполнения: ");
             Arr_output.AppendText(time.ElapsedMilliseconds.ToString());
             Arr_output.AppendText(" мс.\n");
-            //Arr_output.Clear();
-            time.Restart();
-            foreach (int _obj in Sorted)
+            if (!Dont_show.Checked)
             {
-                Arr_output.AppendText(_obj.ToString());
-                Arr_output.AppendText(" ");
+                time.Restart();
+                foreach (int _obj in Sorted)
+                {
+                    Arr_output.AppendText(_obj.ToString());
+                    Arr_output.AppendText(" ");
+                }
+                time.Stop();
+                Arr_output.AppendText("\nВремя выполнения: ");
+                Arr_output.AppendText(time.ElapsedMilliseconds.ToString());
+                Arr_output.AppendText(" мс.\n");
             }
-            time.Stop();
-            Arr_output.AppendText("\nВремя выполнения: ");
-            Arr_output.AppendText(time.ElapsedMilliseconds.ToString());
-            Arr_output.AppendText(" мс.\n");
         }
 
         private void Clear_button_Click(object sender, EventArgs e)
         {
+
             Arr_input.Clear();
             Arr_output.Clear();
-            Sort_choose.ClearSelected();
-            for (int count = 0; count < num_of_sorts; count++)
-            {
-                Sort_choose.SetItemChecked(count, false);
-            }
-           
+            Sort_choose.ClearSelected();            
+            Sort_choose.SetItemChecked((int)chosen_one, false);           
+            chosen_one = null;
             Arr_rand_check.Checked = false;
             Arr_input_check.Checked = false;
             Arr_rand_check.Enabled = true;
             Arr_input_check.Enabled = true;
-            Sort_choose.Enabled = true;
             Arr_size.Clear();
             Arr_range_min.Clear();
             Arr_range_max.Clear();
+            Dont_show.Checked = false;
         }
 
         private void Sort_choose_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Sort_choose.Enabled = false;
+            if (chosen_one != null)
+            {
+                Sort_choose.SetItemChecked((int)chosen_one, false);
+
+            }
+            chosen_one = Sort_choose.SelectedIndex;           
         }
 
         private void Arr_rand_check_CheckedChanged(object sender, EventArgs e)
         {
-            
+
             Arr_rand_check.Enabled = false;
             Arr_input_check.Checked = false;
             Arr_input_check.Enabled = true;
             Arr_size.ReadOnly = false;
             Arr_range_min.ReadOnly = false;
-            Arr_range_max.ReadOnly = false;            
+            Arr_range_max.ReadOnly = false;
             Arr_input.ReadOnly = true;
         }
 
         private void Arr_input_check_CheckedChanged(object sender, EventArgs e)
         {
-            
+
             Arr_input_check.Enabled = false;
             Arr_rand_check.Checked = false;
             Arr_rand_check.Enabled = true;
             Arr_size.ReadOnly = true;
             Arr_range_min.ReadOnly = true;
-            Arr_range_max.ReadOnly = true;           
+            Arr_range_max.ReadOnly = true;
             Arr_input.ReadOnly = false;
         }
     }
@@ -220,7 +229,7 @@ namespace sorts
     {
         private int[] Arr { set; get; }
         private Sort_type Type;
-
+        private int max;
         public int[] GetArr()
         {
             return Arr;
@@ -237,12 +246,14 @@ namespace sorts
         {
             Type = _T;
             Arr = Arr_random(_Arr_size, _Min, _Max);
+            max = Find_max();
         }
 
         public Sorts(Sort_type _T, int[] _Input)
         {
             Type = _T;
             Arr = _Input;
+            max = Find_max();
         }
 
         public int[] It()
@@ -259,12 +270,14 @@ namespace sorts
                     Merge_sort();
                     break;
                 case Sort_type.Tree_sort:
+                    Tree_sort();
                     break;
                 case Sort_type.Bucket:
                     break;
                 case Sort_type.Radix_MSD:
                     break;
                 case Sort_type.Radix_LSD:
+                    Radix_LSD();
                     break;
                 case Sort_type.Selection:
                     break;
@@ -288,11 +301,21 @@ namespace sorts
             return Arr;
         }
 
+        private int Find_max()
+        {           
+            int m = 0;
+            foreach (int _obj in Arr)
+            {
+               m =  _obj > m ? _obj : m;
+            }
+            return m;
+        }
+
         private int[] Arr_random(int _Size, int _Min, int _Max)
         {
             int[] Arr_t = new int[_Size];
             Random rnd = new Random();
-            for (int count = 0; count< _Size; count++)
+            for (int count = 0; count < _Size; count++)
             {
                 Arr_t[count] = rnd.Next(_Min, _Max);
             }
@@ -302,9 +325,9 @@ namespace sorts
         private void Bubble_sort()
         {
             int buf;
-            for (int count_i = 0; count_i< Arr.Length-1; count_i++)
+            for (int count_i = 0; count_i < Arr.Length - 1; count_i++)
             {
-                for (int count_j = 0; count_j < Arr.Length-1; count_j++)
+                for (int count_j = 0; count_j < Arr.Length - 1; count_j++)
                 {
                     if (Arr[count_j] > Arr[count_j + 1])
                     {
@@ -313,14 +336,14 @@ namespace sorts
                         Arr[count_j + 1] = buf;
                     }
                 }
-            }             
+            }
         }
 
         private void Insertion_sort()
         {
             int buf;
             int count_j;
-            for (int count_i = 1; count_i < Arr.Length ; count_i++)
+            for (int count_i = 1; count_i < Arr.Length; count_i++)
             {
                 buf = Arr[count_i];
                 count_j = count_i - 1;
@@ -333,14 +356,15 @@ namespace sorts
             }
         }
 
-        struct W {
+        struct W
+        {
             public List<int> list;
             public int weight;
         }
 
         private List<int> Merge(List<int> _A, List<int> _B)
-        {            
-            List<int> list_out = new List<int>();            
+        {
+            List<int> list_out = new List<int>();
             int count_a = 0;
             int count_b = 0;
             while (count_a < _A.Count && count_b < _B.Count)
@@ -378,7 +402,7 @@ namespace sorts
         private void Merge_sort()
         {
             W temp_list_1 = new W();
-           // W temp_list_2 = new W();
+            // W temp_list_2 = new W();
             Stack<W> stack = new Stack<W>();
             int[] temp = new int[1];
             temp[0] = Arr[0];
@@ -389,14 +413,14 @@ namespace sorts
             temp_list_1.list = new List<int>(temp);
             temp_list_1.weight = 1;
             stack.Push(temp_list_1);
-            int len = Arr.Length;            
+            int len = Arr.Length;
             for (int count = 2; count < len; count++)
             {
-                temp_list_1 = stack.Pop();                
-                while (stack.Count > 0 && temp_list_1.weight == stack.Peek().weight)                    
+                temp_list_1 = stack.Pop();
+                while (stack.Count > 0 && temp_list_1.weight == stack.Peek().weight)
                 {
                     temp_list_1.list = Merge(temp_list_1.list, stack.Pop().list);
-                    temp_list_1.weight++;                    
+                    temp_list_1.weight++;
                 }
                 stack.Push(temp_list_1);
                 temp[0] = Arr[count];
@@ -412,6 +436,135 @@ namespace sorts
 
             Arr = temp_list_1.list.ToArray();
         }
-    }
 
+        private class Leaf
+        {
+            public int key;
+            public Leaf left;
+            public Leaf right;
+
+            public Leaf()
+            {
+                key = 0;
+                left = null;
+                right = null;
+            }
+
+            public Leaf(int _obj)
+            {
+                key = _obj;
+                left = null;
+                right = null;
+            }
+
+            public void Add(int _obj)
+            {
+                if (_obj < key)
+                {
+                    if (left == null)
+                    {
+                        left = new Leaf(_obj);
+                        return;
+                    }
+                    left.Add(_obj);
+                    return;
+                }
+                if (right == null)
+                {
+                    right = new Leaf(_obj);
+                    return;
+                }
+                right.Add(_obj);
+                return;
+            }
+
+            public List<int> Sort_tree(List<int> _list)
+            {
+                if (left != null)
+                {
+                    _list = left.Sort_tree(_list);
+                }
+                _list.Add(key);
+                if (right != null)
+                {
+                    _list = right.Sort_tree(_list);
+                }
+                return _list;
+            }
+        }
+
+        private void Tree_sort()
+        {
+            Leaf tree = new Leaf(Arr[0]);
+            int len = Arr.Length;
+            for (int count = 1; count < len; count++)
+            {
+                tree.Add(Arr[count]);
+            }
+            List<int> sorted = new List<int>();
+            sorted = tree.Sort_tree(sorted);
+            Arr = sorted.ToArray();
+        }
+
+        private int Max_rank()
+        {
+            int m = max;
+            int count = 0;
+            while (m!=0)
+            {
+                m /= 10;
+                count++;
+            }
+            return count;
+        }
+
+        private int Get_digit(int _num, int _rank)
+        {
+            int count = 1;
+            while (count != _rank)
+            {
+                _num /= 10;
+                count++;
+            }
+            return _num % 10;
+        }
+
+        private void Radix_LSD()
+        {
+            int rank = Max_rank();
+            int[] digits = new int[10];
+            int[] Brr;
+            int digit=0;
+            int count = 0;
+            int buf;
+            for (int count_i = 1;count_i<=rank; count_i++)
+            {
+                for (int count_k = 0; count_k < 10; count_k++)
+                {
+                    digits[count_k] = 0;
+                    digit = 0;
+                }
+                for (int count_j = 0; count_j<Arr.Length; count_j++)
+                {
+                    digit = Get_digit(Arr[count_j], count_i);
+                    digits[digit]++;
+                }
+                count = 0;
+                for (int count_k = 0; count_k < 10; count_k++)
+                {
+                    buf = digits[count_k];
+                    digits[count_k] = count;
+                    count += buf;
+                }
+                Brr = new int[Arr.Length];
+                for (int count_j = 0; count_j < Arr.Length; count_j++)
+                {
+                    digit = Get_digit(Arr[count_j], count_i);
+                    Brr[digits[digit]] = Arr[count_j];
+                    digits[digit]++;
+                }
+                Arr = Brr;
+            }
+        }
+    }
 }

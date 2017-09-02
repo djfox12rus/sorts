@@ -45,6 +45,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Sort_choose = new System.Windows.Forms.CheckedListBox();
             this.Speed_test = new System.Windows.Forms.TabPage();
+            this.Dont_show = new System.Windows.Forms.CheckBox();
             this.Sorting_tab.SuspendLayout();
             this.Sorting_test.SuspendLayout();
             this.SuspendLayout();
@@ -62,6 +63,7 @@
             // Sorting_test
             // 
             this.Sorting_test.BackColor = System.Drawing.Color.Silver;
+            this.Sorting_test.Controls.Add(this.Dont_show);
             this.Sorting_test.Controls.Add(this.Arr_output);
             this.Sorting_test.Controls.Add(this.Clear_button);
             this.Sorting_test.Controls.Add(this.Start_button);
@@ -146,15 +148,15 @@
             this.Arr_size.Location = new System.Drawing.Point(529, 25);
             this.Arr_size.Name = "Arr_size";
             this.Arr_size.ReadOnly = true;
-            this.Arr_size.Size = new System.Drawing.Size(128, 23);
+            this.Arr_size.Size = new System.Drawing.Size(209, 23);
             this.Arr_size.TabIndex = 7;
             // 
             // Arr_range_max
             // 
-            this.Arr_range_max.Location = new System.Drawing.Point(596, 53);
+            this.Arr_range_max.Location = new System.Drawing.Point(633, 53);
             this.Arr_range_max.Name = "Arr_range_max";
             this.Arr_range_max.ReadOnly = true;
-            this.Arr_range_max.Size = new System.Drawing.Size(61, 23);
+            this.Arr_range_max.Size = new System.Drawing.Size(105, 23);
             this.Arr_range_max.TabIndex = 6;
             // 
             // Arr_range_min
@@ -162,7 +164,7 @@
             this.Arr_range_min.Location = new System.Drawing.Point(529, 53);
             this.Arr_range_min.Name = "Arr_range_min";
             this.Arr_range_min.ReadOnly = true;
-            this.Arr_range_min.Size = new System.Drawing.Size(61, 23);
+            this.Arr_range_min.Size = new System.Drawing.Size(98, 23);
             this.Arr_range_min.TabIndex = 5;
             // 
             // label3
@@ -241,6 +243,16 @@
             this.Speed_test.TabIndex = 1;
             this.Speed_test.Text = "Тест скорости";
             // 
+            // Dont_show
+            // 
+            this.Dont_show.AutoSize = true;
+            this.Dont_show.Location = new System.Drawing.Point(529, 80);
+            this.Dont_show.Name = "Dont_show";
+            this.Dont_show.Size = new System.Drawing.Size(261, 21);
+            this.Dont_show.TabIndex = 14;
+            this.Dont_show.Text = "Не выводить содержимое массивов";
+            this.Dont_show.UseVisualStyleBackColor = true;
+            // 
             // Sorting_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -277,6 +289,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckedListBox Sort_choose;
         private System.Windows.Forms.TabPage Speed_test;
+        private System.Windows.Forms.CheckBox Dont_show;
     }
 }
 
